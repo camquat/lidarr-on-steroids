@@ -4,6 +4,9 @@ if [ "$CLEAN_DOWNLOADS" != "true" ]; then
     exit
 fi
 
+DOWNLOAD_DIR="${DOWNLOAD_DIR:-/downloads}"
+
+# shellcheck disable=SC2154
 echo "Info|Lidarr event: $lidarr_eventtype" >&2
 
 # Handle Lidarr Test event
@@ -13,4 +16,4 @@ if [[ "$lidarr_eventtype" = "Test" ]]; then
 fi
 
 echo "Info|Cleaning empty folders" >&2
-find /downloads -type d -empty -print -delete >&2
+find "$DOWNLOAD_DIR" -type d -empty -print -delete >&2

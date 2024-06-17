@@ -33,16 +33,18 @@ ENV AUTOCONFIG=true
 ENV CLEAN_DOWNLOADS=true
 ENV PUID=1000
 ENV PGID=1000
+ENV DOWNLOAD_DIR=/downlaods
+ENV MUSIC_DIR=/music
 
 # flac2mp3
-RUN apk add --no-cache ffmpeg && \
+RUN apk add --no-cache ffmpeg jq && \
     rm -rf /var/lib/apt/lists/*
 COPY lidarr-flac2mp3/root/usr /usr
 
 # deemix
 COPY --from=deemix /deemix-server /deemix-server
 RUN chmod +x /deemix-server
-VOLUME ["/config_deemix", "/downloads"]
+VOLUME ["/config_deemix"]
 EXPOSE 6595
 
 # arl-watch
@@ -53,5 +55,5 @@ COPY root /
 RUN chmod +x /etc/services.d/*/run && \
     chmod +x /usr/local/bin/*.sh
 
-VOLUME ["/config", "/music"]
+VOLUME ["/config"]
 EXPOSE 6595 8686

@@ -120,7 +120,7 @@ if [ -z "$plugin" ] || [ "$(echo "$plugin" | jq .updateAvailable)" = "true" ]; t
     echo "[autoconfig] Checking github rate"
     githubRate=$(curl -s https://api.github.com/rate_limit | jq .rate)
     if [ "$(echo "$githubRate" | jq .remaining)" = "0" ]; then
-        deltaGithubResetTime=$(( $(echo "$githubRate" | jq .reset) - $(date +%s) + 5 ))
+        deltaGithubResetTime=$(($(echo "$githubRate" | jq .reset) - $(date +%s) + 5))
         echo "[autoconfig] Waiting github rate limit reset : $deltaGithubResetTime seconds"
         sleep $deltaGithubResetTime
     fi
@@ -138,7 +138,7 @@ fi
 
 if ! isPresent "path" "rootFolder"; then
     echo "[autoconfig] Setting /music rootFolder"
-    value=$(cat /etc/services.d/setup/POST_rootFolder.json)
+    value=$(jq --arg rootfolder "$MUSIC_DIR" '.path |= $rootfolder' /etc/services.d/setup/POST_rootFolder.json)
     apiCallSilent "POST" "rootFolder" "$value"
 fi
 

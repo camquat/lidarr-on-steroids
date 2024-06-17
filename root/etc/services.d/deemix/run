@@ -19,13 +19,13 @@ if [ -n "${ARL}" ]; then
 fi
 
 export DEEMIX_DATA_DIR=/config_deemix/
-export DEEMIX_MUSIC_DIR=/downloads/
+export DEEMIX_MUSIC_DIR="${DOWNLOAD_DIR:-/downloads}"
 export DEEMIX_SERVER_PORT=$port
 export DEEMIX_HOST=0.0.0.0
 
 if [ ! -f $DEEMIX_DATA_DIR/config.json ] && [ "$AUTOCONFIG" = "true" ]; then
     echo "[services.d] Copying deemix configuration"
-    cp -f /etc/services.d/deemix/config.json $DEEMIX_DATA_DIR/config.json
+    jq --arg newDownloadLocation "$DEEMIX_MUSIC_DIR" -r '.downloadLocation |= $newDownloadLocation' /etc/services.d/deemix/config.json >$DEEMIX_DATA_DIR/config.json
 fi
 chown -R "$PUID:$PGID" /config_deemix
 
