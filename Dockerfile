@@ -9,12 +9,12 @@ RUN apk add --no-cache git jq python3 make gcc musl-dev g++ && \
 RUN git clone --recurse-submodules https://gitlab.com/RemixDev/deemix-gui.git
 WORKDIR deemix-gui
 RUN case "$TARGETPLATFORM" in \
-        "linux/amd64") \
-            jq '.pkg.targets = ["node16-alpine-x64"]' ./server/package.json > tmp-json ;; \
-        "linux/arm64") \
-            jq '.pkg.targets = ["node16-alpine-arm64"]' ./server/package.json > tmp-json ;; \
-        *) \
-            echo "Platform $TARGETPLATFORM not supported" && exit 1 ;; \
+    "linux/amd64") \
+    jq '.pkg.targets = ["node16-alpine-x64"]' ./server/package.json > tmp-json ;; \
+    "linux/arm64") \
+    jq '.pkg.targets = ["node16-alpine-arm64"]' ./server/package.json > tmp-json ;; \
+    *) \
+    echo "Platform $TARGETPLATFORM not supported" && exit 1 ;; \
     esac && \
     mv tmp-json /deemix-gui/server/package.json
 RUN yarn install-all
@@ -24,7 +24,7 @@ RUN yarn dist-server
 RUN mv /deemix-gui/dist/deemix-server /deemix-server
 
 
-FROM cr.hotio.dev/hotio/lidarr:pr-plugins-1.4.1.3564
+FROM ghcr.io/hotio/lidarr:pr-plugins-2.4.0.4213
 
 LABEL maintainer="youegraillot"
 
